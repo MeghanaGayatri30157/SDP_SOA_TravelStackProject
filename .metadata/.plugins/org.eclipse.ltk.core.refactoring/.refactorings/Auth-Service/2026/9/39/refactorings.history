@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename package &apos;com.travel.payment&apos; to &apos;com.travel.auth&apos;&#x0A;- Original project: &apos;Auth-Service&apos;&#x0A;- Original element: &apos;Auth-Service/src/main/java/com.travel.payment&apos;&#x0A;- Renamed element: &apos;Auth-Service/src/main/java/com.travel.auth&apos;&#x0A;- Update references to refactored element&#x0A;- Update textual occurrences in comments and strings" description="Rename package &apos;com.travel.payment&apos;" flags="589830" hierarchical="false" id="org.eclipse.jdt.ui.rename.package" input="/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.travel.payment" name="com.travel.auth" qualified="false" references="true" stamp="1789983450515" textual="false" version="1.0"/>
+</session>

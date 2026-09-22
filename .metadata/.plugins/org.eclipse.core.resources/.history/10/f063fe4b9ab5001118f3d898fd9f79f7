@@ -1,0 +1,21 @@
+package com.example.demo.entity;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "packages")
+public class Package {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long packageId;
+
+    private String destination;
+
+    private double price;
+
+    private int availability;
+
+    // getters and setters
+}

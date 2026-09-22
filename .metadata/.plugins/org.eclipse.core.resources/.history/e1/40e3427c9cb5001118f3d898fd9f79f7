@@ -1,0 +1,30 @@
+package com.example.demo.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+import com.example.demo.repository.PackageRepository;
+
+@Service
+public class PackageService {
+
+    private final PackageRepository repository;
+
+    public PackageService(PackageRepository repository) {
+        this.repository = repository;
+    }
+
+    public List<com.example.demo.entity.Package> getAllPackages() {
+        return repository.findAll();
+    }
+
+    public Optional<Package> getPackageById(Long id) {
+        return repository.findById(id);
+    }
+
+    public Package createPackage(Package travelPackage) {
+        return repository.save(travelPackage);
+    }
+}

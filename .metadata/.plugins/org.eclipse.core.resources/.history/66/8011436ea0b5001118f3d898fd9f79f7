@@ -1,0 +1,5 @@
+package com.travel.auth.dto;
+
+public class LoginRequest {
+
+}

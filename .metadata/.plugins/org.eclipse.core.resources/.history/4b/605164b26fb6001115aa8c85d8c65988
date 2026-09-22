@@ -1,0 +1,125 @@
+\<?xml version="1.0" encoding="UTF-8"?>
+
+\<project xmlns="[http://maven.apache.org/POM/4.0.0](http://maven.apache.org/POM/4.0.0)" xmlns\:xsi="[http://www.w3.org/2001/XMLSchema-instance](http://www.w3.org/2001/XMLSchema-instance)"
+
+&#x9;xsi\:schemaLocation="[http://maven.apache.org/POM/4.0.0](http://maven.apache.org/POM/4.0.0) [https://maven.apache.org/xsd/maven-4.0.0.xsd](https://maven.apache.org/xsd/maven-4.0.0.xsd)">
+
+&#x9;\<modelVersion>4.0.0\</modelVersion>
+
+&#x9;\<parent>
+
+&#x9;	\<groupId>org.springframework.boot\</groupId>
+
+&#x9;	\<artifactId>spring-boot-starter-parent\</artifactId>
+
+&#x9;	\<version>4.1.1\</version>
+
+&#x9;	\<relativePath/> \<!-- lookup parent from repository -->
+
+&#x9;\</parent>
+
+&#x9;\<groupId>com.example\</groupId>
+
+&#x9;\<artifactId>API-Gateway\</artifactId>
+
+&#x9;\<version>0.0.1-SNAPSHOT\</version>
+
+&#x9;\<name>API-Gateway\</name>
+
+&#x9;\<description/>
+
+&#x9;\<url/>
+
+&#x9;\<licenses>
+
+&#x9;	\<license/>
+
+&#x9;\</licenses>
+
+&#x9;\<developers>
+
+&#x9;	\<developer/>
+
+&#x9;\</developers>
+
+&#x9;\<scm>
+
+&#x9;	\<connection/>
+
+&#x9;	\<developerConnection/>
+
+&#x9;	\<tag/>
+
+&#x9;	\<url/>
+
+&#x9;\</scm>
+
+&#x9;\<properties>
+
+&#x9;	\<java.version>21\</java.version>
+
+&#x9;	\<spring-cloud.version>2025.1.3\</spring-cloud.version>
+
+&#x9;\</properties>
+
+&#x9;\<dependencies>
+
+&#x9;	\<dependency>
+
+&#x9;		\<groupId>org.springframework.cloud\</groupId>
+
+&#x9;		\<artifactId>spring-cloud-starter-gateway-server-webmvc\</artifactId>
+
+&#x9;	\</dependency>
+
+&#x9;	\<dependency>
+
+&#x9;		\<groupId>org.springframework.cloud\</groupId>
+
+&#x9;		\<artifactId>spring-cloud-starter-netflix-eureka-client\</artifactId>
+
+&#x9;	\</dependency>
+
+&#x9;	\<dependency>
+
+&#x9;		\<groupId>org.springframework.boot\</groupId>
+
+&#x9;		\<artifactId>spring-boot-starter-test\</artifactId>
+
+&#x9;		\<scope>test\</scope>
+
+&#x9;	\</dependency>
+
+&#x9;	\<dependency>
+
+&#x9;		\<groupId>org.springframework.boot\</groupId>
+
+&#x9;		\<artifactId>spring-boot-devtools\</artifactId>
+
+&#x9;	\</dependency>
+
+&#x9;\</dependencies>
+
+&#x9;\<dependencyManagement>
+
+&#x9;	\<dependencies>
+
+&#x9;		\<dependency>
+
+&#x9;			\<groupId>org.springframework.cloud\</groupId>
+
+&#x9;			\<artifactId>spring-cloud-dependencies\</artifactId>
+
+&#x9;			\<version>${spring-cloud.version}\</version>
+
+&#x9;			\<type>pom\</type>
+
+&#x9;			\<scope>import\</scope>
+
+&#x9;		\</dependency>
+
+&#x9;	\</dependencies>
+
+&#x9;\</dependencyManagement>
+
+\</project>
