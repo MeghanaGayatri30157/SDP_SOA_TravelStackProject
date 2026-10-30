@@ -1,11 +1,15 @@
 package com.travel.payment.controller;
 
-import com.travel.payment.entity.Payment;
-import com.travel.payment.service.PaymentService;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.travel.payment.entity.Payment;
+import com.travel.payment.service.PaymentService;
 
 @RestController
 @RequestMapping("/payments")
@@ -19,27 +23,63 @@ public class PaymentController {
 
     @PostMapping
     public ResponseEntity<Payment> createPayment(
-            @RequestBody Payment payment) {
+            @RequestBody Payment payment,
+            @AuthenticationPrincipal Jwt jwt) {
 
-        return ResponseEntity.ok(
-                paymentService.createPayment(payment)
-        );
+        String username = jwt.getSubject();
+
+        Payment savedPayment =
+                paymentService.createPayment(payment, username);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(savedPayment);
     }
 
     @GetMapping
-    public ResponseEntity<List<Payment>> getAllPayments() {
+    public ResponseEntity<List<Payment>> getAllPayments(
+            @AuthenticationPrincipal Jwt jwt) {
 
-        return ResponseEntity.ok(
-                paymentService.getAllPayments()
-        );
+        String role = jwt.getClaimAsString("role");
+
+        if ("CUSTOMER".equals(role)) {
+            String username = jwt.getSubject();
+
+            return ResponseEntity.ok(
+                    paymentService.getCustomerPayments(username)
+            );
+        }
+
+        if ("ADMIN".equals(role)) {
+            return ResponseEntity.ok(
+                    paymentService.getAllPayments()
+            );
+        }
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Payment> getPaymentById(
-            @PathVariable Long id) {
+            @PathVariable Long id,
+            @AuthenticationPrincipal Jwt jwt) {
 
-        return paymentService.getPaymentById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        String role = jwt.getClaimAsString("role");
+
+        if ("CUSTOMER".equals(role)) {
+            String username = jwt.getSubject();
+
+            return paymentService
+                    .getCustomerPaymentById(id, username)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        }
+
+        if ("ADMIN".equals(role)) {
+            return paymentService.getPaymentById(id)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        }
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 }

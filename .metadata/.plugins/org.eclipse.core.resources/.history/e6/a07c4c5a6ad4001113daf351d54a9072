@@ -1,0 +1,58 @@
+package com.travel.payment.controller;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.*;
+
+import com.travel.payment.entity.Payment;
+import com.travel.payment.service.PaymentService;
+
+@RestController
+@RequestMapping("/payments")
+public class PaymentController {
+
+    private final PaymentService paymentService;
+
+    public PaymentController(PaymentService paymentService) {
+        this.paymentService = paymentService;
+    }
+
+    @PostMapping
+    public ResponseEntity<Payment> createPayment(
+            @RequestBody Payment payment,
+            @AuthenticationPrincipal Jwt jwt) {
+
+        String username = jwt.getSubject();
+
+        Payment savedPayment =
+                paymentService.createPayment(payment, username);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(savedPayment);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Payment>> getAllPayments(
+            @AuthenticationPrincipal Jwt jwt) {
+
+        String username = jwt.getSubject();
+
+        List<Payment> payments =
+                paymentService.getCustomerPayments(username);
+
+        return ResponseEntity.ok(payments);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Payment> getPaymentById(
+            @PathVariable Long id) {
+
+        return paymentService.getPaymentById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+}

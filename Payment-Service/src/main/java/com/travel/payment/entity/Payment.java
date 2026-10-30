@@ -15,6 +15,8 @@ public class Payment {
     private double amount;
 
     private String status;
+    @Column(name = "customer_username")
+    private String customerUsername;
 
     public Payment() {
     }
@@ -49,5 +51,13 @@ public class Payment {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+    
+    public String getCustomerUsername() {
+        return customerUsername;
+    }
+
+    public void setCustomerUsername(String customerUsername) {
+        this.customerUsername = customerUsername;
     }
 }
