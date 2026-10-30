@@ -41,7 +41,8 @@ public class AuthService {
                 passwordEncoder.encode(request.getPassword())
         );
 
-        user.setRole(request.getRole());
+        // Public registration always creates a CUSTOMER
+        user.setRole("CUSTOMER");
 
         return userRepository.save(user);
     }

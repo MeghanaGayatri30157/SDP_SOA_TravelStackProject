@@ -1,5 +1,0 @@
-package com.travel.auth.config;
-
-public class SecurityConfig {
-
-}

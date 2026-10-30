@@ -1,5 +1,0 @@
-package com.travel.api.config;
-
-public class SecurityConfig {
-
-}
