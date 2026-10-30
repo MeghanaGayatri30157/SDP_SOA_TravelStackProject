@@ -7,18 +7,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 import com.travel.booking.entity.Booking;
 import com.travel.booking.service.BookingService;
+import com.travel.booking.service.PackageClient;
 
 @RestController
 @RequestMapping("/bookings")
 public class BookingController {
 
     private final BookingService bookingService;
+    private final PackageClient packageClient;
 
-    public BookingController(BookingService bookingService) {
+    public BookingController(BookingService bookingService, PackageClient packageClient) {
         this.bookingService = bookingService;
+        this.packageClient = packageClient;
     }
 
     @PostMapping
@@ -34,15 +39,34 @@ public class BookingController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Booking>> getAllBookings(
+    public ResponseEntity<List<Booking>> getBookings(
             @AuthenticationPrincipal Jwt jwt) {
 
-        String username = jwt.getSubject();
+        String role = jwt.getClaimAsString("role");
 
-        List<Booking> bookings =
-                bookingService.getCustomerBookings(username);
+        if ("CUSTOMER".equals(role)) {
+            String username = jwt.getSubject();
 
-        return ResponseEntity.ok(bookings);
+            return ResponseEntity.ok(
+                    bookingService.getCustomerBookings(username)
+            );
+        }
+
+        if ("TRAVEL_COMPANY".equals(role)) {
+            String token = jwt.getTokenValue();
+
+            return ResponseEntity.ok(
+                    bookingService.getCompanyBookings(token)
+            );
+        }
+
+        if ("ADMIN".equals(role)) {
+            return ResponseEntity.ok(
+                    bookingService.getAllBookings()
+            );
+        }
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @GetMapping("/{id}")
@@ -50,10 +74,35 @@ public class BookingController {
             @PathVariable Long id,
             @AuthenticationPrincipal Jwt jwt) {
 
-        String username = jwt.getSubject();
+        String role = jwt.getClaimAsString("role");
 
-        return bookingService.getCustomerBookingById(id, username)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        if ("CUSTOMER".equals(role)) {
+            return bookingService
+                    .getCustomerBookingById(id, jwt.getSubject())
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        }
+
+        if ("TRAVEL_COMPANY".equals(role)) {
+
+            String token = jwt.getTokenValue();
+
+            List<Long> packageIds =
+                    packageClient.getPackageIdsOwnedBy(token);
+
+            return bookingService.getBookingById(id)
+                    .filter(booking ->
+                            packageIds.contains(booking.getPackageId()))
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        }
+
+        if ("ADMIN".equals(role)) {
+            return bookingService.getBookingById(id)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        }
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 }

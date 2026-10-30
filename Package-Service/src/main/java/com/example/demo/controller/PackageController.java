@@ -88,4 +88,15 @@ public class PackageController {
 
         return ResponseEntity.ok("Package deleted successfully");
     }
+    
+    @GetMapping("/my-packages")
+    public ResponseEntity<List<Package>> getMyPackages(
+            @AuthenticationPrincipal Jwt jwt) {
+
+        String username = jwt.getSubject();
+
+        return ResponseEntity.ok(
+                packageService.getPackagesByOwner(username)
+        );
+    }
 }

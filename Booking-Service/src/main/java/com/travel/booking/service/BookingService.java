@@ -2,7 +2,8 @@ package com.travel.booking.service;
 
 import java.util.List;
 import java.util.Optional;
-
+import java.util.ArrayList;
+import com.travel.booking.service.PackageClient;
 import org.springframework.stereotype.Service;
 
 import com.travel.booking.entity.Booking;
@@ -12,9 +13,13 @@ import com.travel.booking.repository.BookingRepository;
 public class BookingService {
 
     private final BookingRepository bookingRepository;
+    private final PackageClient packageClient;
+    public BookingService(
+            BookingRepository bookingRepository,
+            PackageClient packageClient) {
 
-    public BookingService(BookingRepository bookingRepository) {
         this.bookingRepository = bookingRepository;
+        this.packageClient = packageClient;
     }
 
     public Booking createBooking(Booking booking, String username) {
@@ -41,5 +46,21 @@ public class BookingService {
 
     public Optional<Booking> getBookingById(Long id) {
         return bookingRepository.findById(id);
+    }
+    
+    public List<Booking> getCompanyBookings(String token) {
+
+        List<Long> packageIds =
+                packageClient.getPackageIdsOwnedBy(token);
+
+        List<Booking> companyBookings = new ArrayList<>();
+
+        for (Long packageId : packageIds) {
+            companyBookings.addAll(
+                    bookingRepository.findByPackageId(packageId)
+            );
+        }
+
+        return companyBookings;
     }
 }

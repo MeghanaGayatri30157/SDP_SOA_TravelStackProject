@@ -78,4 +78,7 @@ public class PackageService {
 
         return true;
     }
+    public List<Package> getPackagesByOwner(String username) {
+        return repository.findAllByOwnerUsername(username);
+    }
 }
