@@ -1,11 +1,15 @@
 package com.travel.booking.controller;
 
-import com.travel.booking.entity.Booking;
-import com.travel.booking.service.BookingService;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.travel.booking.entity.Booking;
+import com.travel.booking.service.BookingService;
 
 @RestController
 @RequestMapping("/bookings")
@@ -19,25 +23,36 @@ public class BookingController {
 
     @PostMapping
     public ResponseEntity<Booking> createBooking(
-            @RequestBody Booking booking) {
+            @RequestBody Booking booking,
+            @AuthenticationPrincipal Jwt jwt) {
 
-        return ResponseEntity.ok(
-                bookingService.createBooking(booking)
-        );
+        String username = jwt.getSubject();
+
+        Booking savedBooking = bookingService.createBooking(booking, username);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedBooking);
     }
 
     @GetMapping
-    public ResponseEntity<List<Booking>> getAllBookings() {
-        return ResponseEntity.ok(
-                bookingService.getAllBookings()
-        );
+    public ResponseEntity<List<Booking>> getAllBookings(
+            @AuthenticationPrincipal Jwt jwt) {
+
+        String username = jwt.getSubject();
+
+        List<Booking> bookings =
+                bookingService.getCustomerBookings(username);
+
+        return ResponseEntity.ok(bookings);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Booking> getBookingById(
-            @PathVariable Long id) {
+            @PathVariable Long id,
+            @AuthenticationPrincipal Jwt jwt) {
 
-        return bookingService.getBookingById(id)
+        String username = jwt.getSubject();
+
+        return bookingService.getCustomerBookingById(id, username)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

@@ -13,6 +13,9 @@ public class Booking {
     private Long userId;
     private Long packageId;
     private String status;
+    
+    @Column(name = "customer_username")
+    private String customerUsername;
 
     public Booking() {
     }
@@ -47,5 +50,13 @@ public class Booking {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+    
+    public String getCustomerUsername() {
+        return customerUsername;
+    }
+
+    public void setCustomerUsername(String customerUsername) {
+        this.customerUsername = customerUsername;
     }
 }

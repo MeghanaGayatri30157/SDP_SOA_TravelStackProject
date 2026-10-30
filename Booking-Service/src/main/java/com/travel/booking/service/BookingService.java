@@ -1,30 +1,45 @@
 package com.travel.booking.service;
 
-import com.travel.booking.entity.Booking;
-import com.travel.booking.repository.BookingRepository;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+import com.travel.booking.entity.Booking;
+import com.travel.booking.repository.BookingRepository;
 
 @Service
 public class BookingService {
 
-    private final BookingRepository repository;
+    private final BookingRepository bookingRepository;
 
-    public BookingService(BookingRepository repository) {
-        this.repository = repository;
+    public BookingService(BookingRepository bookingRepository) {
+        this.bookingRepository = bookingRepository;
     }
 
-    public Booking createBooking(Booking booking) {
-        return repository.save(booking);
+    public Booking createBooking(Booking booking, String username) {
+        booking.setBookingId(null);
+        booking.setCustomerUsername(username);
+        return bookingRepository.save(booking);
     }
 
     public List<Booking> getAllBookings() {
-        return repository.findAll();
+        return bookingRepository.findAll();
+    }
+
+    public List<Booking> getCustomerBookings(String username) {
+        return bookingRepository.findByCustomerUsername(username);
+    }
+
+    public Optional<Booking> getCustomerBookingById(Long id, String username) {
+        return bookingRepository.findByBookingIdAndCustomerUsername(id, username);
+    }
+
+    public List<Booking> getBookingsByPackageId(Long packageId) {
+        return bookingRepository.findByPackageId(packageId);
     }
 
     public Optional<Booking> getBookingById(Long id) {
-        return repository.findById(id);
+        return bookingRepository.findById(id);
     }
 }

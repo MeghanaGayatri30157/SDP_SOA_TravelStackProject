@@ -1,0 +1,30 @@
+package com.travel.booking.service;
+
+import com.travel.booking.entity.Booking;
+import com.travel.booking.repository.BookingRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class BookingService {
+
+    private final BookingRepository repository;
+
+    public BookingService(BookingRepository repository) {
+        this.repository = repository;
+    }
+
+    public Booking createBooking(Booking booking) {
+        return repository.save(booking);
+    }
+
+    public List<Booking> getAllBookings() {
+        return repository.findAll();
+    }
+
+    public Optional<Booking> getBookingById(Long id) {
+        return repository.findById(id);
+    }
+}
